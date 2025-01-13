@@ -15,23 +15,27 @@ public class Robot extends MovingItem{
     private int payloadWeight;
     private int batteryLevel;
     private State state;
+    private int timeTick;
+    private int runTime = 0;
     
 
-    public Robot(String robotID, int xVelocity, int yVelocity, int x, int y, int payloadWeight) {
+    public Robot(String robotID, int xVelocity, int yVelocity, int x, int y, int payloadWeight, int timeTick) {
         this (
                 robotID,
                 new Velocity(xVelocity, yVelocity),
                 new Point(x, y),
-                payloadWeight
+                payloadWeight,
+                timeTick
         );
     }
 
-    public Robot(String robotID, Velocity velocity, Point location, int payloadWeight) {
+    public Robot(String robotID, Velocity velocity, Point location, int payloadWeight, int timeTick) {
         super(velocity, location, "images/%s-green.png".formatted(robotID));
         this.robotID = robotID;
         this.payloadWeight = payloadWeight;
         this.batteryLevel = 100;
         this.state = State.Free;
+        this.timeTick = timeTick;
     }
 
     @Override
@@ -58,8 +62,10 @@ public class Robot extends MovingItem{
         if (this.batteryLevel >= 0) {
             super.move();
         }
-
-        this.batteryLevel -= 1;
+        runTime++;
+        if (runTime != 0 && runTime % timeTick == 0) {
+            this.batteryLevel -= 1;
+        }
     }
 
 }

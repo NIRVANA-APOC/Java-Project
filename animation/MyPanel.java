@@ -21,24 +21,92 @@ public class MyPanel extends JPanel implements ActionListener {
     private int COLS = 30;
     private int CELL_SIZE = 30;
 
-    private int x1, x2, x_step, y1, y2, y_step;
+    private static int x1;
+    private static int x2;
+    private static int x_step;
+    private static int y1;
+    private static int y2;
+    private static int y_step;
 
     private Timer timer;
+    private final int timeTick = 50;
     private final HashMap<String, Item> items;
+    List<Item> itemList;
 
     public MyPanel() {
         super();
         this.setPreferredSize(new Dimension((COLS + 2) * CELL_SIZE, (ROWS + 2) * CELL_SIZE));
         this.setBackground(Color.lightGray);
         this.items = new HashMap<>();
-        List<Item> itemList = new ArrayList<>();
+        this.itemList = new ArrayList<>();
         Robot botA = new Robot(
                 "a",
                 new MovingItem.Velocity(1, 0),
                 getPoint(4, 5),
-                0
+                0,
+                1
         );
         addItem("a", botA);
+        readConfig();
+        for (int i = 0; i < itemList.size(); i++) {
+            addItem("item-%d".formatted(i), itemList.get(i));
+        }
+        timer = new Timer(timeTick, this);
+        timer.start();
+    }
+
+    private Point getPoint(int x, int y) {
+        return new Point(x * CELL_SIZE, y * CELL_SIZE);
+    }
+
+    private void paintPoint(Graphics g, Point p) {
+        g.setColor(Color.BLACK);
+        g.drawLine(p.x, p.y, p.x + CELL_SIZE, p.y);
+        g.drawLine(p.x, p.y, p.x, p.y + CELL_SIZE);
+        g.drawLine(p.x, p.y + CELL_SIZE, p.x + CELL_SIZE, p.y + CELL_SIZE);
+        g.drawLine(p.x + CELL_SIZE, p.y, p.x + CELL_SIZE, p.y + CELL_SIZE);
+    }
+
+    private void paintRectangle(Graphics g, Point p1, Point p2) {
+        int x_min = Integer.min(p1.x, p2.x);
+        int x_max = Integer.max(p1.x, p2.x);
+        int y_min = Integer.min(p1.y, p2.y);
+        int y_max = Integer.max(p1.y, p2.y);
+
+        for (int y = y_min; y <= y_max; y += CELL_SIZE) {
+            g.drawLine(x_min, y, x_max, y);
+        }
+
+        for (int x = x_min; x <= x_max; x += CELL_SIZE) {
+            g.drawLine(x, y_min, x, y_max);
+        }
+    }
+
+    private void paintTable(Graphics g) {
+        paintTable(g, 2, 28, 2, 2, 19, 5);
+    }
+
+    private void paintTable(Graphics g, int x1, int x2, int x_step, int y1, int y2, int y_step) {
+        // 19 x 28  (5, 2)
+        for (int i = x1; i <= x2; i += x_step + 1) {
+            for (int j = y1; j <= y2; j += y_step + 1) {
+                this.paintRectangle(g, getPoint(i, j), getPoint(i + 2, j + 5));
+            }
+        }
+    }
+
+    private void paintItems(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        this.items.forEach((id, item) -> {
+            g2d.drawImage(item.getImage(), item.location.x, item.location.y, null);
+        });
+    }
+
+    public void addItem(String id, Item item) {
+        this.items.put(id, item);
+    }
+
+    private void readConfig() {
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             XMLStreamReader reader = factory.createXMLStreamReader(new FileReader(configFilePath));
@@ -97,84 +165,6 @@ public class MyPanel extends JPanel implements ActionListener {
             }
         } catch (XMLStreamException | FileNotFoundException e) {
             throw new RuntimeException(e);
-    }
-        for (int i = 0; i < itemList.size(); i++) {
-            addItem("item-%d".formatted(i), itemList.get(i));
-        }
-        timer = new Timer(50, this);
-        timer.start();
-    }
-
-    private Point getPoint(int x, int y) {
-        return new Point(x * CELL_SIZE, y * CELL_SIZE);
-    }
-
-    private void paintPoint(Graphics g, Point p) {
-        g.setColor(Color.BLACK);
-        g.drawLine(p.x, p.y, p.x + CELL_SIZE, p.y);
-        g.drawLine(p.x, p.y, p.x, p.y + CELL_SIZE);
-        g.drawLine(p.x, p.y + CELL_SIZE, p.x + CELL_SIZE, p.y + CELL_SIZE);
-        g.drawLine(p.x + CELL_SIZE, p.y, p.x + CELL_SIZE, p.y + CELL_SIZE);
-    }
-
-    private void paintRectangle(Graphics g, Point p1, Point p2) {
-        int x_min = Integer.min(p1.x, p2.x);
-        int x_max = Integer.max(p1.x, p2.x);
-        int y_min = Integer.min(p1.y, p2.y);
-        int y_max = Integer.max(p1.y, p2.y);
-
-        for (int y = y_min; y <= y_max; y += CELL_SIZE) {
-            g.drawLine(x_min, y, x_max, y);
-        }
-
-        for (int x = x_min; x <= x_max; x += CELL_SIZE) {
-            g.drawLine(x, y_min, x, y_max);
-        }
-    }
-
-    private void paintTable(Graphics g) {
-        paintTable(g, 2, 28, 2, 2, 19, 5);
-    }
-
-    private void paintTable(Graphics g, int x1, int x2, int x_step, int y1, int y2, int y_step) {
-        // 19 x 28  (5, 2)
-        for (int i = x1; i <= x2; i += x_step + 1) {
-            for (int j = y1; j <= y2; j += y_step + 1) {
-                this.paintRectangle(g, getPoint(i, j), getPoint(i + 2, j + 5));
-            }
-        }
-    }
-
-    private void paintItems(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        this.items.forEach((id, item) -> {
-            g2d.drawImage(item.getImage(), item.location.x, item.location.y, null);
-        });
-    }
-
-    public void addItem(String id, Item item) {
-        this.items.put(id, item);
-    }
-
-    public static void readConfig() {
-        try {
-            XMLInputFactory factory = XMLInputFactory.newInstance();
-            XMLStreamReader reader = factory.createXMLStreamReader(new FileReader(configFilePath));
-
-            while (reader.hasNext()) {
-                int event = reader.next();
-
-                if (event == XMLStreamConstants.START_ELEMENT) {
-                    System.out.println("Element: " + reader.getLocalName());
-                    int cnt = reader.getAttributeCount();
-                    System.out.println(cnt);
-                    for (int i = 0; i < cnt; i++) {
-                        System.out.printf("Name: %s\tValue: %s%n", reader.getAttributeLocalName(i), reader.getAttributeValue(i));
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -250,7 +240,7 @@ public class MyPanel extends JPanel implements ActionListener {
 
     public static void main(String[] args) {
         writeConfig();
-        readConfig();
+//        readConfig();
     }
 
 }
