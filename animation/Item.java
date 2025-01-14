@@ -1,5 +1,7 @@
 package project.animation;
 
+import project.utils.Shape.Point;
+
 import javax.swing.*;
 import java.awt.*;
 

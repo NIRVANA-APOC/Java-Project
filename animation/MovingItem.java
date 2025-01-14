@@ -1,7 +1,7 @@
 package project.animation;
 
 
-import javax.swing.*;
+import project.utils.Shape.Point;
 
 public class MovingItem extends Item{
 
