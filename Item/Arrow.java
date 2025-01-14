@@ -1,6 +1,6 @@
-package project.utils.Item;
+package project.Item;
 
-import project.utils.Shape.Point;
+import project.Item.Shape.Point;
 
 public class Arrow extends Item {
 

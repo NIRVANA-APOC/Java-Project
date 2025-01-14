@@ -1,8 +1,9 @@
-package project.utils.Robot;
+package project.Item.Robot;
 
-import project.utils.Item.ItemType;
-import project.utils.Item.MovingItem;
-import project.utils.Shape.Point;
+import project.Item.ItemType;
+import project.Item.Map;
+import project.Item.MovingItem;
+import project.Item.Shape.Point;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,13 +31,15 @@ public class Robot extends MovingItem {
         this.batteryLevel = 100;
     }
 
-    public boolean fetch() {
+    public boolean fetch(Point to, Map map) {
+        this.moveTo(to, map);
         this.state = State.Fetching;
 
         return true;
     }
 
-    public boolean deliver() {
+    public boolean deliver(Point to, Map map) {
+        this.moveTo(to, map);
         state = State.Delivering;
 
         return true;
@@ -59,6 +62,14 @@ public class Robot extends MovingItem {
         }
         imageUrl += ".png";
         return imageUrl;
+    }
+
+    @Override
+    public void move() {
+        super.move();
+        if (this.batteryLevel > 0){
+            this.batteryLevel--;
+        }
     }
 
     @Override

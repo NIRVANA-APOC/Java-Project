@@ -1,7 +1,7 @@
 package project.animation;
 
 
-import project.utils.Shape.Point;
+import project.Item.Shape.Point;
 
 public class MovingItem extends Item{
 

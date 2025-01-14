@@ -1,9 +1,7 @@
-package project.utils.Item;
+package project.Item;
 
-import project.utils.Map;
-import project.utils.Shape.Point;
+import project.Item.Shape.Point;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class MovingItem extends Item {

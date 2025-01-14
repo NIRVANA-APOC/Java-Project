@@ -1,7 +1,7 @@
-package project.utils.Robot;
+package project.Item.Robot;
 
-import project.utils.Item.ItemType;
-import project.utils.Shape.Point;
+import project.Item.ItemType;
+import project.Item.Shape.Point;
 
 public class C extends Robot {
 

@@ -1,7 +1,7 @@
-package project.utils.Item;
+package project.Item;
 
-import project.utils.Shape.Drawable;
-import project.utils.Shape.Point;
+import project.Item.Shape.Drawable;
+import project.Item.Shape.Point;
 
 import java.awt.*;
 

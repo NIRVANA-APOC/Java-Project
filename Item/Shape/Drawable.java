@@ -1,4 +1,4 @@
-package project.utils.Shape;
+package project.Item.Shape;
 
 import javax.swing.*;
 import java.awt.*;

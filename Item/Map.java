@@ -1,16 +1,14 @@
-package project.utils;
+package project.Item;
 
-import project.utils.Item.*;
-import project.utils.Robot.A;
-import project.utils.Robot.B;
-import project.utils.Robot.C;
-import project.utils.Robot.Robot;
-import project.utils.Shape.Point;
+import project.Item.Robot.A;
+import project.Item.Robot.B;
+import project.Item.Robot.C;
+import project.Item.Robot.Robot;
+import project.Item.Shape.Point;
 
 import java.awt.*;
 import java.io.*;
 import java.util.*;
-import java.util.List;
 
 
 public class Map {
@@ -19,6 +17,7 @@ public class Map {
     public int ROWS;
     public int COLS;
     public int CELL_SIZE;
+    private int timeTick;
     public ArrayList<InArrow> inArrows = new ArrayList<>();
     public ArrayList<OutArrow> outArrows = new ArrayList<>();
     public ArrayList<Plug> chargePlug = new ArrayList<>();
@@ -150,6 +149,7 @@ public class Map {
                 this.ROWS = scanner.nextInt();
                 this.COLS = scanner.nextInt();
                 this.CELL_SIZE = scanner.nextInt();
+                this.timeTick = scanner.nextInt();
             }
             this.map = new Item[ROWS][COLS];
             int cnt = 0;
@@ -205,7 +205,7 @@ public class Map {
     public void exportMap() {
         try {
             FileWriter writer = new FileWriter(mapFilePath);
-            writer.write("%d %d %d \n".formatted(ROWS, COLS, CELL_SIZE));
+            writer.write("%d %d %d %d \n".formatted(ROWS, COLS, CELL_SIZE, timeTick));
             for (int i = 0; i < ROWS; i++) {
                 for (int j = 0; j < COLS; j++) {
                     writer.write(map[i][j].type.ordinal() + " ");

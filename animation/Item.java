@@ -1,6 +1,6 @@
 package project.animation;
 
-import project.utils.Shape.Point;
+import project.Item.Shape.Point;
 
 import javax.swing.*;
 import java.awt.*;
